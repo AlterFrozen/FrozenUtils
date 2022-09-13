@@ -1,7 +1,7 @@
 /*
  * @Author: Frozen (https://github.com/AlterFrozen)
  * @Date: 2022-09-12 17:07:31
- * @LastEditTime: 2022-09-12 19:17:45
+ * @LastEditTime: 2022-09-13 11:09:15
  * @LastEditors: Please set LastEditors
  * @Description: A collection of bitwise operation functions (C++20)
 
@@ -24,7 +24,7 @@
 namespace FU
 {
     /**
-     * Returns the lowest 1-bit of num
+     * Returns the lowest 1-bit of num (e.g. num = B110, return = B010)
      * @param {int} num
      * @return {int} The lowest 1-bit of num
      */
