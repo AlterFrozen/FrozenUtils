@@ -1,7 +1,7 @@
 /*
  * @Author: Frozen (https://github.com/AlterFrozen)
  * @Date: 2022-09-13 17:07:31
- * @LastEditTime: 2022-09-13 21:48:50
+ * @LastEditTime: 2022-09-14 17:59:38
  * @LastEditors: Please set LastEditors
  * @Description: A collection of algorithms (C++20)
 
@@ -20,7 +20,35 @@
 
 #include <vector>
 #include <queue>
+#include <algorithm>
 #include <cassert>
+#include <chrono>
+#include <random>
+
+namespace
+{
+    using Clock = std::chrono::high_resolution_clock;
+    const Clock::time_point TIME_SEED = Clock::now();
+
+    template<class Container>
+    size_t _partition(Container& data, size_t start, size_t end)
+    {
+        assert(start < end && "Indice Error: start >= end");
+
+        size_t verge = end - 1;
+        static std::default_random_engine e((Clock::now() - ::TIME_SEED).count());
+        static std::uniform_int_distribution<size_t> uniDis(start, verge);
+        size_t divPos = uniDis(e);
+
+        std::swap(data[divPos], data[verge]);
+        size_t pivot = start;
+        for (divPos = start; divPos < end; ++divPos)
+            if (data[divPos] < data[verge] && pivot++ != divPos) std::swap(data[divPos], data[pivot]);
+
+        std::swap(data[pivot], data[verge]);
+        return pivot;
+    }
+}
 
 namespace FU
 {
@@ -52,6 +80,7 @@ namespace FU
                         const _Estimator _DistanceEstimator,
                         const _DistanceCmp _Greater)
     {
+        if (k == 0) return {};
         assert((idx_start <= idx_home && idx_home <= idx_end) && "Index Range Error");
         assert((idx_end - idx_start) > k && "No existing at least K neighbors!");
 
@@ -63,22 +92,32 @@ namespace FU
 
         auto cmp = [_Greater](const _IndexAndDist& a, const _IndexAndDist& b)->bool
         {
-            return _Greater(a.second, b.second);
+            return !_Greater(a.second, b.second);
         };
 
-        std::priority_queue<_IndexAndDist, std::vector<_IndexAndDist>, decltype(cmp)> minHeap(cmp);
+        std::priority_queue<_IndexAndDist, std::vector<_IndexAndDist>, decltype(cmp)> maxHeap(cmp);
 
         for (size_t idx = idx_start; idx < idx_end; ++idx)
         {
             if (idx == idx_home) continue;
-            minHeap.emplace(_IndexAndDist{idx, _DistanceEstimator(container[idx_home], container[idx])});
+
+            _DistType dist = _DistanceEstimator(container[idx_home], container[idx]);
+            if (idx - idx_start >= k) 
+            {
+                if (maxHeap.top().second > dist)
+                {
+                    maxHeap.pop();
+                    maxHeap.emplace(_IndexAndDist{idx, dist});
+                }
+            } else maxHeap.emplace(_IndexAndDist{idx, dist});
         }
         
-        std::vector<size_t> knn_idx(k);
-        for(uint32_t i = 0; i < k; ++i) 
+        std::vector<size_t> knn_idx;
+        knn_idx.reserve(k);
+        while(!maxHeap.empty())
         {
-            knn_idx[i] = minHeap.top().first;
-            minHeap.pop();
+            knn_idx.emplace_back(maxHeap.top().first);
+            maxHeap.pop();
         }
         return knn_idx;
     }
