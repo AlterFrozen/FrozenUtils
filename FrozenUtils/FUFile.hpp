@@ -23,7 +23,7 @@
 namespace FU
 {
     /**
-     * Returns the standardized path (transform '/' to '\')
+     * Returns the standardized path of bash(/"directory A"/"directory B"/"...")
      * @param {std::string&} target
      * @return {std::string} standardized path
      */
