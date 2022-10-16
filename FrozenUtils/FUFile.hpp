@@ -23,7 +23,7 @@
 namespace FU
 {
     /**
-     * Returns the standardized path of bash(/"directory A"/"directory B"/"...")
+     * Returns the standardized path (transform '/' to '\')
      * @param {std::string&} target
      * @return {std::string} standardized path
      */
@@ -31,7 +31,7 @@ namespace FU
     {
         std::string standardPath;
         int cnt = 0;
-        for (const auto c : target) 
+        for (char c : target) 
         //Usage: Avoid unexpected embedded spaces and confuse related code
         //Tested Systems: Windows10 & Linux(Ubuntu)
         {
@@ -41,7 +41,7 @@ namespace FU
                 else standardPath +="\"/\"";
             } else standardPath.push_back(c);
         }
-
+        standardPath.push_back('\"');
         return standardPath;
     }
 
