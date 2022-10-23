@@ -1,7 +1,7 @@
 /*
  * @Author: Frozen (https://github.com/AlterFrozen)
  * @Date: 2022-09-12 17:07:31
- * @LastEditTime: 2022-09-13 21:43:12
+ * @LastEditTime: 2022-10-23 19:43:12
  * @LastEditors: Please set LastEditors
  * @Description: A collection of bitwise operation functions (C++20)
 
@@ -18,6 +18,7 @@
 #ifndef _FUBITS_HPP_
 #define _FUBITS_HPP_
 
+#include <bit>
 #include <cassert>
 #include <concepts>
 
@@ -42,7 +43,7 @@ namespace FU
     int leadingZeroBits(unsigned int num)
     {
         assert(num != 0 && "leadingZeroBits()>> The result is undefined when num is 0!");
-        return __builtin_clz(num);
+        return std::countl_zero(num);
     }
 
     /**
@@ -53,7 +54,7 @@ namespace FU
     int trailingZeroBits(unsigned int num)
     {
         assert(num != 0 && "trailingZeroBits()>> The result is undefined when num is 0!");
-        return __builtin_ctz(num);
+        return std::countr_zero(num);
     }
 
     /**
@@ -63,7 +64,32 @@ namespace FU
      */    
     int countOneBits(unsigned int num)
     {
-        return __builtin_popcount(num);
+        return std::popcount(num);
+    }
+
+    /**
+     * Returns the bit-reversed num
+     * @param {uint32_t} num
+     * @return {uint32_t} The bit-reversed num.
+     */    
+    uint32_t reverseBits(uint32_t num)
+    {
+        num = num >> 1 & 0x55555555 | (num & 0x55555555) << 1;
+        num = num >> 2 & 0x33333333 | (num & 0x33333333) << 2;
+        num = num >> 4 & 0x0f0f0f0f | (num & 0x0f0f0f0f) << 4;
+        num = num >> 8 & 0x00ff00ff | (num & 0x00ff00ff) << 8;
+        return num >> 16 | num << 16;
+    }
+
+    /**
+     * Returns the Endianness-reversed num
+     * @param {uint32_t} num
+     * @return {uint32_t} The Endianness-reversed num.
+     */
+    uint32_t reverseEndianness(uint32_t num)
+    {
+        num = num >> 8 & 0x00ff00ff | (num & 0x00ff00ff) << 8;
+        return num >> 16 | num << 16;
     }
 }
 
