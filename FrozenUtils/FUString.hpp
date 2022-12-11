@@ -3,7 +3,7 @@
  * @Date: 2022-12-10 17:07:31
  * @LastEditTime: 2022-12-10 17:40:38
  * @LastEditors: Please set LastEditors
- * @Description: A collection of algorithms (C++20)
+ * @Description: A collection of the operations for string (C++20)
 
 ███████╗██████╗  ██████╗ ███████╗███████╗███╗   ██╗    ██╗   ██╗████████╗██╗██╗     ███████╗
 ██╔════╝██╔══██╗██╔═══██╗╚══███╔╝██╔════╝████╗  ██║    ██║   ██║╚══██╔══╝██║██║     ██╔════╝
